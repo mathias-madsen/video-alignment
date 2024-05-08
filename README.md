@@ -2,13 +2,21 @@
 
 This repository contains some code for aligning two video streams so that similar events happen at similar times when you play them back. The method I use to accomplish this uses [a pretrained neural network](https://pytorch.org/vision/master/models/resnet.html) to measure the similarity between two images, and then a [time-warping](https://en.wikipedia.org/wiki/Dynamic_time_warping) algorithm to align the two sequences.
 
+Here is a video pair that were aligned in this way:
+
 https://github.com/mathias-madsen/video-alignment/assets/16747080/d99e264e-f070-4cb6-892d-e5c0516c276d
 
-In all likelihood, the exact nature of the neural network probably doesn't make much difference, as long as it has some internal representations that respond to semantic and spatial information. To ensure the latter, I have made added a soft, two-dimensional argmax operation after the last convolutional operation of the network. Judging from the closest-match pairings in comparisons like the following, the network does a good job of choosing similar codes for similar images:
+Note how certain key events such as the lighting of the match or the extinction of the candles happen at exactly the same time in these temporally aligned videos, even though they were out of sync in reality:
+
+https://github.com/mathias-madsen/video-alignment/assets/16747080/a7638ddb-94bd-4376-98e1-e5c9c99ade68
+
+This alignment can be accomplished because the pretrained neural network I use is able to make some very sound judgments about which frames are most alike in the two parallel video streams:
 
 ![supposed_matches](https://github.com/mathias-madsen/video-alignment/assets/16747080/01afc05c-3913-4d46-bb0b-1d77f4a60cd1)
 
-More specifically, the alignment uses a dynamic-programming algorithm to find out when to advance one or the other video stream. If you think of the cost of displaying two dissimilar images on screen at the same time as a type of distance, then this algorithm can be viewed as a type of shortest-path algorithm.
+In all likelihood, the exact nature of the neural network probably doesn't make much difference, as long as it has some internal representations that respond to semantic and spatial information. (To ensure the latter, I have made added a soft, two-dimensional argmax operation after the last convolutional operation of the network.)
+
+The actual alignment uses a dynamic-programming algorithm to find out when to pause and when to step the two video streams. If you think of the cost of displaying two dissimilar images on screen at the same time as a type of distance, then this algorithm can be viewed as a type of shortest-path algorithm, racing towards the end of both videos through the path of least dissimilarity:
 
 ![shortest_path](https://github.com/mathias-madsen/video-alignment/assets/16747080/2d7f4829-12bf-4597-ba0d-dbbe73569b76)
 
