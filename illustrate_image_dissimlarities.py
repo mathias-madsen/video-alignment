@@ -1,7 +1,15 @@
 """
 Show pairs of best-match frames for a pair of videos, for diagnostics.
 
-Usage like process_videos.py.
+Usage:
+
+>>> python3 illustrate_image_dissimilarities.py <NAME>
+
+where <NAME> identifies two .mov files in the videos/ folder, e.g.,
+
+    videos/candle1.mov
+    videos/candle2.mov
+
 """
 
 import os

@@ -1,7 +1,7 @@
 """
 Illustrate the optimal path through two videos, for diagnostics.
 
-Usage like process_videos.py.
+Usage like `illustrate_image_dissimilarities.py`.
 """
 
 import os
