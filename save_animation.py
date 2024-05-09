@@ -1,3 +1,27 @@
+"""
+Save a movie showing the aligned videos with frame numbers.
+
+Usage:
+
+>>> python3 process_videos.py <NAME> <MATCHING>
+
+where <NAME> identifies two .mov files in the videos/ folder, e.g.,
+
+    videos/candle1.mov
+    videos/candle2.mov
+
+and <MATCHING> is one of
+
+ - optimal : use time warp to play back the videos in the way that
+             achieves the highest level of frame-pair similarity.
+ - pad : play back both videos at their natural speed, but let the
+         last frame of the shortest video hang around until the
+         longest video is finished.
+ - stretch : adjust the speed of the shortest video so that that it
+             has the same length as the longest, without taking the
+             video contents into account.
+"""
+
 import os
 import numpy as np
 from matplotlib import pyplot as plt
