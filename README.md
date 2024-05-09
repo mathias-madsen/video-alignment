@@ -2,23 +2,41 @@
 
 This repository contains some code for aligning two video streams so that similar events happen at similar times when you play them back. The method I use to accomplish this uses [a pretrained neural network](https://pytorch.org/vision/master/models/resnet.html) to measure the similarity between two images, and then a [time-warping](https://en.wikipedia.org/wiki/Dynamic_time_warping) algorithm to align the two sequences.
 
-Here is a video pair that were aligned in this way:
+## Example
 
-https://github.com/mathias-madsen/video-alignment/assets/16747080/d99e264e-f070-4cb6-892d-e5c0516c276d
-
-Note how certain key events such as the lighting of the match or the extinction of the candles happen at exactly the same time in these temporally aligned videos, even though they were out of sync in reality:
+Here is a pair of _misaligned_ videos that I created by physically repeating the same sequence of action twice:
 
 https://github.com/mathias-madsen/video-alignment/assets/16747080/a7638ddb-94bd-4376-98e1-e5c9c99ade68
 
-This alignment can be accomplished because the pretrained neural network I use is able to make some very sound judgments about which frames are most alike in the two parallel video streams:
+Due to natural variations in my performance, these two videos quickly drift out of sync. However, by using the neural network to annotate each frame and then warping the playback speeds to achieve the best match, we get the following two _aligned_ videos:
+
+https://github.com/mathias-madsen/video-alignment/assets/16747080/d99e264e-f070-4cb6-892d-e5c0516c276d
+
+Note how certain key events (such as the lighting of the match or the extinction of the candles) now happen at exactly the same time.
+
+## Semantic Annotation
+
+This alignment can be accomplished because the pretrained neural network I use is able to make some very sound judgments about which frames are most alike in the two parallel video streams.
+
+We can get a sense of how this network sees the world by seeing what images it considers similar. To do so, we can pick a random frame from one video and then find its most similar match in another video. Here are some examples of such matches:
 
 ![supposed_matches](https://github.com/mathias-madsen/video-alignment/assets/16747080/01afc05c-3913-4d46-bb0b-1d77f4a60cd1)
 
+Here again, the two videos recorded separate executions of the same sequence of events. All the left images are taken from the first performance, and all the right images from the second.
+
 In all likelihood, the exact nature of the neural network probably doesn't make much difference, as long as it has some internal representations that respond to semantic and spatial information. (To ensure the latter, I have made added a soft, two-dimensional argmax operation after the last convolutional operation of the network.)
 
-The actual alignment uses a dynamic-programming algorithm to find out when to pause and when to step the two video streams. If you think of the cost of displaying two dissimilar images on screen at the same time as a type of distance, then this algorithm can be viewed as a type of shortest-path algorithm, racing towards the end of both videos through the path of least dissimilarity:
+## Framewise Alignment
+
+The actual alignment uses a dynamic-programming algorithm to find out when to pause and when to step the two video streams.
+
+If you think of the cost of displaying two dissimilar images on screen at the same time as a measure of distance, then this algorithm is a shortest-path algorithm. It finds a route that starts at the beginning of both videos and advances to the end of both of them along the path of least dissimilarity:
 
 ![shortest_path](https://github.com/mathias-madsen/video-alignment/assets/16747080/2d7f4829-12bf-4597-ba0d-dbbe73569b76)
+
+Note that there are no image pairs that match perfectly (zero dissimilarity), which is what we would expect when physically repeating an action twice in the real world. There is, however, a conspicuous valley of low dissimilarity running through this matrix, and the optimal path rolls along in that valley.
+
+## Baselines
 
 I have compared the time-warping approach to two very rudimentary baselines:
 
