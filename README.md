@@ -24,7 +24,7 @@ We can get a sense of how this network sees the world by seeing what images it c
 
 Here again, the two videos recorded separate executions of the same sequence of events. All the left images are taken from the first performance, and all the right images from the second.
 
-In all likelihood, the exact nature of the neural network probably doesn't make much difference, as long as it has some internal representations that respond to semantic and spatial information. (To ensure the latter, I have made added a soft, two-dimensional argmax operation after the last convolutional operation of the network.)
+I have tried a few minor variations of the neural network used to compute these labels, but there does not appear to be much practical difference between them. In all likelihood, the exact choice of architecture doesn't matter much as long as the network has internal representations that respond to semantic and spatial information.
 
 ## Framewise Alignment
 
