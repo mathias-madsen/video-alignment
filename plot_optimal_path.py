@@ -27,8 +27,8 @@ if __name__ == "__main__":
     codes2 = np.load(os.path.join(rootdir, "codes", "%s2.npy" % name))
 
     # # downsample for the sake of efficiency:
-    codes1 = codes1[:, ::5, :]
-    codes2 = codes2[:, ::5, :]
+    codes1 = codes1[:, ::5]
+    codes2 = codes2[:, ::5]
 
     # flatten codes if they aren't already flat:
     vecs1 = np.reshape(codes1, [len(codes1), -1])
