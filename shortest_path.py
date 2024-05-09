@@ -1,3 +1,44 @@
+"""
+Dynamic programming for computing the shortest path through a grid.
+
+The functions in this module allows you to compute the shortest path
+through a grid of the form
+
+    +-------+-------+-------+-------+
+    | start |       |       |       |
+    +-------+-------+-------+-------+
+    |       |       |       |       |
+    +-------+-------+-------+-------+
+    |       |       |       |  end  |
+    +-------+-------+-------+-------+
+
+where it costs a fixed and known amount to touch a specific tile, and
+you must make one of three moves in each step: walk one step south, one
+step east, or walk one step south-east.
+
+For instance, suppose the tiles have the following costs:
+
+    +-----+-----+-----+-----+
+    |  1  |  1  |  7  |  1  |
+    +-----+-----+-----+-----+
+    |  6  |  9  |  1  |  5  |
+    +-----+-----+-----+-----+
+    |  1  |  6  |  5  |  6  |
+    +-----+-----+-----+-----+
+
+Then the shortest path from the top left tile to the bottom right tile
+is as follows:
+
+    +-----+-----+-----+-----+
+    |  X  |  X  |     |     |
+    +-----+-----+-----+-----+
+    |     |     |  X  |     |
+    +-----+-----+-----+-----+
+    |     |     |     |  X  |
+    +-----+-----+-----+-----+
+
+"""
+
 import numpy as np
 
 from typing import List, Tuple
