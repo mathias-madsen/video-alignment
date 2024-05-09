@@ -1,3 +1,17 @@
+"""
+Compute image codes for every frame in a pair of videos.
+
+Usage:
+
+>>> python3 process_videos.py <NAME>
+
+where <NAME> identifies two .mov files in the videos/ folder, e.g.,
+
+    videos/candle1.mov
+    videos/candle2.mov
+
+"""
+
 import os
 import numpy as np
 from argparse import ArgumentParser
