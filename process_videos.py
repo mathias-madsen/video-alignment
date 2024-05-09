@@ -3,7 +3,7 @@ import numpy as np
 from argparse import ArgumentParser
 
 from video_capture import iter_video
-from image_encoding import encode
+from image_encoding import ImageEncoder
 
 
 if __name__ == "__main__":
@@ -21,8 +21,9 @@ if __name__ == "__main__":
     codespath1 = os.path.join(rootdir, "codes", "%s1.npy" % name)
     codespath2 = os.path.join(rootdir, "codes", "%s2.npy" % name)
 
-    codes1 = np.array([encode(f) for f in iter_video(vidpath1)])
-    codes2 = np.array([encode(f) for f in iter_video(vidpath2)])
+    encoder = ImageEncoder()
+    codes1 = np.array([encoder.encode(f) for f in iter_video(vidpath1)])
+    codes2 = np.array([encoder.encode(f) for f in iter_video(vidpath2)])
 
     os.makedirs(os.path.join(rootdir, "codes"), exist_ok=True)
     np.save(codespath1, codes1)

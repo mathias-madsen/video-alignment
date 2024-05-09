@@ -7,7 +7,7 @@ from PIL import Image
 
 preprocess = torchvision.transforms.Compose([
     torchvision.transforms.Resize(256),
-    torchvision.transforms.CenterCrop(224),
+    # torchvision.transforms.CenterCrop(224),
     torchvision.transforms.ToTensor(),
     torchvision.transforms.Normalize(
         mean=[0.485, 0.456, 0.406],
@@ -15,17 +15,11 @@ preprocess = torchvision.transforms.Compose([
 ])
 
 
-# weights = torchvision.models.resnet.ResNet18_Weights.DEFAULT
-weights = torchvision.models.resnet.ResNet50_Weights.DEFAULT
-model = torchvision.models.resnet50(weights=weights)
-model.eval()
-
-
 def gridlike(image):
     h, w = image.shape[-2:]
     yspan = torch.linspace(-1, +1, h)
     xspan = torch.linspace(-1, +1, w)
-    return torch.meshgrid(yspan, xspan)
+    return torch.meshgrid(yspan, xspan, indexing="ij")
 
 
 def softmax2d(logits):
@@ -44,28 +38,33 @@ def soft_argmax2d(logits):
     return torch.stack([ymean, xmean], axis=-1)
 
 
-def _forward_impl(x):
-    x = model.conv1(x)
-    x = model.bn1(x)
-    x = model.relu(x)
-    x = model.maxpool(x)
-    x = model.layer1(x)
-    x = model.layer2(x)
-    x = model.layer3(x)
-    x = model.layer4(x)
-    return soft_argmax2d(x)
+class ImageEncoder:
 
+    def __init__(self):
+        # weights = torchvision.models.resnet.ResNet18_Weights.DEFAULT
+        weights = torchvision.models.resnet.ResNet50_Weights.DEFAULT
+        model = torchvision.models.resnet50(weights=weights)
+        model.eval()
+        def _forward_impl(x):
+            x = model.conv1(x)
+            x = model.bn1(x)
+            x = model.relu(x)
+            x = model.maxpool(x)
+            x = model.layer1(x)
+            x = model.layer2(x)
+            x = model.layer3(x)
+            x = model.layer4(x)
+            return soft_argmax2d(x)
+        model._forward_impl = _forward_impl
+        self.model = model
 
-model._forward_impl = _forward_impl
-
-
-def encode(uint8_rgb_image):
-    """ Compute a latent vector for a raw RGB image. """
-    # the preproceesor expects `PIL.Image`s:
-    pil_rgb_image = Image.fromarray(uint8_rgb_image)
-    input_tensor = preprocess(pil_rgb_image)
-    with torch.no_grad():
-        encoding = model(input_tensor.unsqueeze(0))
-        return encoding.squeeze(0).numpy()
+    def encode(self, uint8_rgb_image):
+        """ Compute a latent vector for a raw RGB image. """
+        # the preproceesor expects `PIL.Image`s:
+        pil_rgb_image = Image.fromarray(uint8_rgb_image)
+        input_tensor = preprocess(pil_rgb_image)
+        with torch.no_grad():
+            encoding = self.model(input_tensor.unsqueeze(0))
+            return encoding.squeeze(0).numpy()
 
 
