@@ -1,3 +1,5 @@
+""" Convenience function wrapping `cv2.VideoCapture`. """
+
 import cv2 as cv
 from tqdm import tqdm
 
