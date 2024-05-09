@@ -1,3 +1,9 @@
+"""
+Show pairs of best-match frames for a pair of videos, for diagnostics.
+
+Usage like process_videos.py.
+"""
+
 import os
 import numpy as np
 from matplotlib import pyplot as plt

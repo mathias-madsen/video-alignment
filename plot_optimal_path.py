@@ -1,3 +1,9 @@
+"""
+Illustrate the optimal path through two videos, for diagnostics.
+
+Usage like process_videos.py.
+"""
+
 import os
 import numpy as np
 from matplotlib import pyplot as plt
