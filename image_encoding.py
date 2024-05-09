@@ -55,6 +55,9 @@ class ImageEncoder:
             x = model.layer3(x)
             x = model.layer4(x)
             return soft_argmax2d(x)
+            # x = model.avgpool(x)
+            # x = torch.flatten(x, 1)
+            # return torch.log(1e-5 + x)
         model._forward_impl = _forward_impl
         self.model = model
 
